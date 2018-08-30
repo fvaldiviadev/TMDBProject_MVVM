@@ -10,13 +10,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Network.Models.PopularMovie;
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.PopularMovies.PopularMoviesContract;
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.R;
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.Data.Network.Models.PopularMovie;
+import tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.R;
+import tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.Utils.Constants;
 
 public class PopularMovieListAdapter extends RecyclerView.Adapter {
     private final int VIEW_ITEM = 1;
@@ -29,10 +29,10 @@ public class PopularMovieListAdapter extends RecyclerView.Adapter {
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
-    private PopularMoviesContract.View.OnLoadMorePopularMoviesListener onLoadMorePopularMoviesListener;
+    private OnLoadMorePopularMoviesListener onLoadMorePopularMoviesListener;
 
 
-    public PopularMovieListAdapter(RecyclerView recyclerView, final PopularMoviesContract.View.OnLoadMorePopularMoviesListener onLoadMorePopularMoviesListener) {
+    public PopularMovieListAdapter(RecyclerView recyclerView, final OnLoadMorePopularMoviesListener onLoadMorePopularMoviesListener) {
 
         this.onLoadMorePopularMoviesListener=onLoadMorePopularMoviesListener;
 
@@ -167,6 +167,10 @@ public class PopularMovieListAdapter extends RecyclerView.Adapter {
             super(v);
             progressBar = (ProgressBar) v.findViewById(R.id.pb_popularmovielist);
         }
+    }
+
+    interface OnLoadMorePopularMoviesListener {
+        void onLoadMoreMovies();
     }
 
 

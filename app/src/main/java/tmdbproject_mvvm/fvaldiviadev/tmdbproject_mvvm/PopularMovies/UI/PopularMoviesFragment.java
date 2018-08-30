@@ -1,14 +1,21 @@
 package tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.PopularMovies.UI;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Network.Models.PopularMovie;
@@ -19,41 +26,101 @@ import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Search.UI.SearchAc
 
 import java.util.List;
 
+import tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.PopularMovies.ViewModel.PopularMoviesViewModel;
 
-public class PopularMoviesActivity extends AppCompatActivity implements PopularMoviesContract.View,PopularMoviesContract.View.OnLoadMorePopularMoviesListener{
+
+public class PopularMoviesFragment extends Fragment {
 
 
+    public static final String TAG = "projectlistview";
 
     private TextView tvEmptyView;
     private RecyclerView rvPopularMovieList;
     private PopularMovieListAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
+    private PopularMovieListAdapter.OnLoadMorePopularMoviesListener onLoadMorePopularMoviesListener;
 
     private PopularMoviesContract.Presenter presenter;
 
     protected Handler handler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        inicializateOnLoadMorePopularMoviesListener();
+        adapter = new PopularMovieListAdapter(rvPopularMovieList,onLoadMorePopularMoviesListener);
 
         //TODO inyección de dependecias con Dagger 2
         presenter=new PopularMoviesPresenter(this);
 
-        loadView();
+        final PopularMoviesViewModel viewModel = ViewModelProviders.of(this).get(ProjectListViewModel.class);
 
 
-        //Add a empty item for show the progress bar
-        addToList(null);
-        presenter.loadPopularMovieList();
+
+
+
 
 
 
 
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_popularmovies, container, false);
+        rvPopularMovieList = view.findViewById(R.id.rv_popularmovielist);
+
+        tvEmptyView = view.findViewById(R.id.tv_nomovies);
+        rvPopularMovieList = view.findViewById(R.id.rv_popularmovielist);
+        handler = new Handler();
+
+        rvPopularMovieList.setHasFixedSize(true);
+        linearLayoutManager = new LinearLayoutManager(this);
+        rvPopularMovieList.setLayoutManager(linearLayoutManager);
+
+        setAdapter();
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        final PopularMoviesViewModel viewModel = ViewModelProviders.of(this).get(PopularMoviesViewModel.class);
+        observeViewModel(viewModel);
+    }
+
+    private void observeViewModel(PopularMoviesViewModel viewModel) {
+        viewModel.getProjectListObservable().observe(this, new Observer<List<Project>>() {
+            @Override
+            public void onChanged(@Nullable List<Project> projects) {
+                if (projects != null)
+                    mAdapter.setProjectList(projects);
+            }
+        });
+    }
+
+    private void inicializateOnLoadMorePopularMoviesListener(){
+        onLoadMorePopularMoviesListener =new PopularMovieListAdapter.OnLoadMorePopularMoviesListener() {
+            @Override
+            public void onLoadMoreMovies() {
+                //Add a empty item for show the progress bar
+                addToList(null);
+
+                presenter.loadMoreMovies();
+            }
+        };
+    }
     private void loadView(){
+        View view = inflater.inflate(R.layout.fragment_popularmovies, container, false);
+        rvPopularMovieList = view.findViewById(R.id.rv_popularmovielist);
+
         tvEmptyView = (TextView) findViewById(R.id.tv_nomovies);
         rvPopularMovieList = (RecyclerView) findViewById(R.id.rv_popularmovielist);
         handler = new Handler();
@@ -144,11 +211,4 @@ public class PopularMoviesActivity extends AppCompatActivity implements PopularM
         adapter.removeLastElement();
     }
 
-    @Override
-    public void onLoadMoreMovies() {
-        //Add a empty item for show the progress bar
-        addToList(null);
-
-        presenter.loadMoreMovies();
-    }
 }
