@@ -18,15 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Network.Models.PopularMovie;
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.PopularMovies.PopularMoviesContract;
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.PopularMovies.Presenter.PopularMoviesPresenter;
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.R;
-import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Search.UI.SearchActivity;
-
-import java.util.List;
-
 import tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.PopularMovies.ViewModel.PopularMoviesViewModel;
+import tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.R;
 
 
 public class PopularMoviesFragment extends Fragment {
@@ -51,19 +44,6 @@ public class PopularMoviesFragment extends Fragment {
         inicializateOnLoadMorePopularMoviesListener();
         adapter = new PopularMovieListAdapter(rvPopularMovieList,onLoadMorePopularMoviesListener);
 
-        //TODO inyección de dependecias con Dagger 2
-        presenter=new PopularMoviesPresenter(this);
-
-        final PopularMoviesViewModel viewModel = ViewModelProviders.of(this).get(ProjectListViewModel.class);
-
-
-
-
-
-
-
-
-
     }
 
     @Nullable
@@ -78,7 +58,7 @@ public class PopularMoviesFragment extends Fragment {
         handler = new Handler();
 
         rvPopularMovieList.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(getContext());
         rvPopularMovieList.setLayoutManager(linearLayoutManager);
 
         setAdapter();
@@ -91,6 +71,10 @@ public class PopularMoviesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        //Add a empty item for show the progress bar
+        addToList(null);
+        presenter.loadPopularMovieList();
 
         final PopularMoviesViewModel viewModel = ViewModelProviders.of(this).get(PopularMoviesViewModel.class);
         observeViewModel(viewModel);
@@ -116,21 +100,6 @@ public class PopularMoviesFragment extends Fragment {
                 presenter.loadMoreMovies();
             }
         };
-    }
-    private void loadView(){
-        View view = inflater.inflate(R.layout.fragment_popularmovies, container, false);
-        rvPopularMovieList = view.findViewById(R.id.rv_popularmovielist);
-
-        tvEmptyView = (TextView) findViewById(R.id.tv_nomovies);
-        rvPopularMovieList = (RecyclerView) findViewById(R.id.rv_popularmovielist);
-        handler = new Handler();
-
-        rvPopularMovieList.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(this);
-        rvPopularMovieList.setLayoutManager(linearLayoutManager);
-
-        setAdapter();
-
     }
 
     private void setAdapter() {

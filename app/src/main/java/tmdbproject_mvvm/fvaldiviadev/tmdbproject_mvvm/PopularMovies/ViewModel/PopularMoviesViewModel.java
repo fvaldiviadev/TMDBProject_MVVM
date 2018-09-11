@@ -1,27 +1,33 @@
 package tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.PopularMovies.ViewModel;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+
 import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Network.Models.PopularMovie;
 import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.PopularMovies.Interactors.PopularMoviesInteractor;
 import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.PopularMovies.PopularMoviesContract;
 
 import java.util.List;
 
-public class PopularMoviesViewModel implements PopularMoviesContract.Presenter,PopularMoviesContract.Interactor.ResponseRequestPopularMovieInteractor {
+import tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.Data.Network.Models.PopularMovie;
 
-    private PopularMoviesContract.View view;
-    private PopularMoviesContract.Interactor interactor;
+public class PopularMoviesViewModel extends AndroidViewModel {
 
-    public PopularMoviesViewModel(PopularMoviesContract.View view){
-        this.view=view;
+    private final LiveData<List<PopularMovie>> popularMovieListObservable;
 
-        interactor=new PopularMoviesInteractor(this);
+    public PopularMoviesViewModel(Application application){
+        super(application);
+
+        //TODO instanciate repository
+        popularMovieListObservable=null;
 
     }
 
     @Override
     public void loadPopularMovieList() {
 
-        interactor.requestPopularMovieList();
+        repository.requestPopularMovieList(page);
 
     }
 
