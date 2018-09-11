@@ -1,4 +1,4 @@
-package tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.Data.Repositories;
+package com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Repositories;
 
 import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Network.DAO.MoviesDAO;
 import com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Network.Models.FoundMovie;
@@ -54,7 +54,7 @@ public class MoviesRepository implements MoviesDAO.ResponseRequestPopularMoviesD
 
     }
 
-    public void requestSearch(String searchText, int searchPage, boolean firstSearch) {
+    public void requestSearch(String searchText, int searchPage,  boolean firstSearch) {
 
         moviesDAO.requestSearch(searchText,searchPage);
 
@@ -124,13 +124,13 @@ public class MoviesRepository implements MoviesDAO.ResponseRequestPopularMoviesD
 
     public interface ResponseRequestSearchRepository {
         void onResponseOKSearchRepository(List<FoundMovie> newSearchList, int totalPages);
-        void onFailureSearchRepository(int responseCode, String responseMessage);
+        void onFailureSearchRepository(int responseCode,String responseMessage);
         void clearList();
     }
 
     public interface ResponseRequestPopularMoviesRepository {
-        void onResponseOKPopularMoviesRepository(List<PopularMovie> newPopularMovieList, int totalPages);
-        void onFailurePopularMoviesRepository(int responseCode, String responseMessage);
+        void onResponseOKPopularMoviesRepository(List<PopularMovie> newPopularMovieList,int totalPages);
+        void onFailurePopularMoviesRepository(int responseCode,String responseMessage);
     }
 
 }

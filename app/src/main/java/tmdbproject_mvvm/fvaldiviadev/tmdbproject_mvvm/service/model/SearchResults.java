@@ -1,11 +1,11 @@
-package tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.Data.Network.Models;
+package com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Network.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class PopularMoviesFeed {
+public class SearchResults {
 
     @SerializedName("page")
     @Expose
@@ -18,7 +18,7 @@ public class PopularMoviesFeed {
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    private List<PopularMovie> popularMovies = null;
+    private List<FoundMovie> results = null;
 
     public Integer getPage() {
         return page;
@@ -44,12 +44,14 @@ public class PopularMoviesFeed {
         this.totalPages = totalPages;
     }
 
-    public List<PopularMovie> getPopularMovies() {
-        return popularMovies;
+    public List<FoundMovie> getResults() {
+        return results;
     }
 
-    public void setPopularMovies(List<PopularMovie> popularMovies) {
-        this.popularMovies = popularMovies;
+    public void setResults(List<FoundMovie> results) {
+        this.results = results;
     }
 
 }
+
+

@@ -1,4 +1,4 @@
-package tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.Utils;
+package tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.utils;
 
 public class Constants {
     public static final String API_KEY="93aea0c77bc168d8bbce3918cefefa45";

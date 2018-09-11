@@ -1,5 +1,5 @@
 
-package tmdbproject_mvvm.fvaldiviadev.tmdbproject_mvvm.Data.Network.Models;
+package com.themoviedbproject_mvp.fvaldiviadev.tmdbproject_mvp.Data.Network.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
